@@ -1,13 +1,12 @@
 #!/bin/bash
 
-mkdir aya -p
+mkdir packages -p
 
-urls=$(curl https://github.com/YidaozhanYa/arch-build/releases/tag/packages -s|grep "/YidaozhanYa/arch-build/releases/download/packages/"|awk -F '"|"' '{print$2}')
+urls=$(curl https://pkgbuild.yidaozhan.ga/x86_64/ -s | grep .tar.zst | awk -F"\">" '{print $2}' | awk -F"</A>" '{print $1}')
 
 for i in ${urls[*]}; do 
-pkg=$(echo $i|awk -F '/' '{print$7}')
-echo Downloading $pkg
-wget -q https://github.com/$i -P packages/
-repo-add -p packages.db.tar.gz ./packages/$pkg
+echo Downloading $i
+wget -q https://pkgbuild.yidaozhan.ga/x86_64/$i -P packages/
+repo-add -p yidaozhan.db.tar.gz ./packages/$i
 done
 
