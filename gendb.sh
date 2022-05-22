@@ -2,11 +2,11 @@
 
 mkdir packages -p
 
-urls=$(curl https://pkgbuild.yidaozhan.ga/x86_64/ -s | grep .tar.zst | awk -F"\">" '{print $2}' | awk -F"</A>" '{print $1}')
+urls=$(echo `curl -d '{"path":"/PKGBUILD/x86_64"}' -H "Content-Type: application/json" "https://file.yidaozhan.ga/api/public/path" | jq -c '.data.files[]' | while read i; do echo $i | jq -cr ".name"|grep zst;done`)
 
 for i in ${urls[*]}; do 
 echo Downloading $i
-wget -q https://pkgbuild.yidaozhan.ga/x86_64/$i -P packages/
+wget -q https://file.yidaozhan.ga/d/PKGBUILD/x86_64/$i -P packages/
 repo-add -p yidaozhan.db.tar.gz ./packages/$i
 done
 
